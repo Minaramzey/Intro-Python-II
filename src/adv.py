@@ -1,5 +1,6 @@
 from room import Room
-
+from player import Player
+from item import Item
 # Declare all the rooms
 
 room = {
@@ -21,6 +22,11 @@ chamber! Sadly, it has already been completely emptied by
 earlier adventurers. The only exit is to the south."""),
 }
 
+# items
+items = {'Axe Body Spray': Item("Axe Body Spray,", "Bro you smell..."),
+         'Yu-Gi-Yo Cards': Item("Yu-Gi-Yo Cards,", "Incase you come across a challenger..."),
+         'Torch': Item("Torch,", "Show Me The Light!")
+         }
 
 # Link rooms together
 
@@ -33,12 +39,21 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
+#Link Items
+
+room['outside'].items.append(items['Torch'])
+room['overlook'].items.append(items['Yu-Gi-Yo Cards'])
+room['narrow'].items.append(items['Axe Body Spray'])
+
 #
 # Main
 #
 
 # Make a new player object that is currently in the 'outside' room.
+name = input('\nWelcome Traveler! What is your name...? \n')
+player = Player(name, room['outside'])
 
+print(f'\nWelcome {player.name} to Juggalo land... \n')
 # Write a loop that:
 #
 # * Prints the current room name
@@ -49,3 +64,21 @@ room['treasure'].s_to = room['narrow']
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+user_is_playing = True
+
+while user_is_playing:
+    print(f'\nYou are at the {player.current_room.name}\n')
+
+    print(f'\n {player.current_room.description} {player.current_room.list_items()}')
+
+    user_input = input(
+        " Enter (n,e,s,w) to continue \n Want To Quit The Game? (q) \n What will you do? ")
+
+    if user_input in ["n", "e", "s", "w"]:
+        print("Heads towards...")
+        player.move(user_input)
+    elif user_input == "q":
+        print("Until Next Time Traveler")
+        user_is_playing = False
+    else:
+        print("The Movement You Have Entered Is Not Allowed")
